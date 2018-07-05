@@ -1,8 +1,14 @@
 package com.mohamedmorsi.pandaq;
 
+import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,10 +18,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.mohamedmorsi.pandaq.Adapters.FragmentAdapter;
+import com.mohamedmorsi.pandaq.Fragments.MyOrdersFragment;
+import com.mohamedmorsi.pandaq.Fragments.ProductsFragment;
+import com.mohamedmorsi.pandaq.Fragments.WishListFragment;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    ViewPager viewPager;
+    android.support.v4.app.FragmentManager fragmentManager;
+    FragmentAdapter fragmentAdapter;
+    TabLayout tabLayout;
+    AppBarLayout appBarLayout;
+    TabLayout tabOne,tabTwo,tabThree;
+    TextView textViewOne,textViewTwo,textViewThree;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +51,59 @@ public class Main extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        viewPager = findViewById(R.id.pager);
+        fragmentManager = this.getSupportFragmentManager();
+        fragmentAdapter = new FragmentAdapter(fragmentManager);
+        tabLayout =  findViewById(R.id.tabs);
+        appBarLayout = findViewById(R.id.appBar);
+
+        makeView();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void makeView(){
+        fragmentAdapter.addFragment(new ProductsFragment());
+        fragmentAdapter.addFragment(new MyOrdersFragment());
+        fragmentAdapter.addFragment(new WishListFragment());
+
+        viewPager.setAdapter(fragmentAdapter);
+        viewPager.setOffscreenPageLimit(3);
+
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabOne = (TabLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        textViewOne = tabOne.findViewById(R.id.text_tab);
+        textViewOne.setText(R.string.first_page);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        tabTwo = (TabLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        textViewTwo = tabTwo.findViewById(R.id.text_tab);
+        textViewTwo.setText(R.string.second_page);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        tabThree = (TabLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        textViewThree = tabThree.findViewById(R.id.text_tab);
+        textViewThree.setText(R.string.Third_page);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     @Override
